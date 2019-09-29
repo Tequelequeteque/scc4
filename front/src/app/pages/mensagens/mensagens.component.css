@@ -1,0 +1,30 @@
+.container {
+  padding: 30px 0 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ddd;
+}
+
+.container > .actions {
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60%;
+  max-width: fit-content;
+  background: #fff;
+  border-radius: 4px;
+  padding: 30px;
+}
+
+.actions > small {
+  margin: 0 0 30px;
+}
+
+.actions > .container-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 30px;
+}

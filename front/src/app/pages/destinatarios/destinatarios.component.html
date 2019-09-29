@@ -1,0 +1,293 @@
+<div class="container">
+  <!-- ações -->
+  <div class="actions">
+    <button
+      pButton
+      label="Upload"
+      class="ui-button-secondary"
+      (click)="handleUploadFile()"
+    ></button>
+    <button
+      pButton
+      label="Cadastrar"
+      class="ui-button-secondary"
+      (click)="handleCadastrar()"
+    ></button>
+    <button
+      pButton
+      label="Editar"
+      class="ui-button-secondary"
+      (click)="handleEditar()"
+    ></button>
+    <button
+      pButton
+      label="Excluir"
+      class="ui-button-secondary"
+      (click)="handleExcluir()"
+    ></button>
+  </div>
+  <!-- upload -->
+  <div class="upload" [hidden]="hiddenUploadFile">
+    <p-fileUpload
+      #fileUpload
+      [multiple]="false"
+      accept=".csv"
+      (uploadHandler)="handleSubmitUploadFile(fileUpload)"
+      [showCancelButton]="false"
+      chooseLabel="Escolher Arquivo"
+      customUpload="true"
+      invalidFileTypeMessageSummary="{0}, formato de arquivo inválido."
+      invalidFileTypeMessageDetail="Apenas arquivo '{0}'."
+    >
+    </p-fileUpload>
+  </div>
+  <!-- cadastrar -->
+  <form
+    id="form"
+    (ngSubmit)="handleSubmitCadastrar()"
+    [formGroup]="cadastrarForm"
+    [hidden]="hiddenFormCadastrar"
+  >
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="name"
+        placeholder="Nome"
+        [size]="50"
+      />
+    </div>
+
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="email"
+        placeholder="Email"
+        [size]="50"
+      />
+    </div>
+
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="phone"
+        placeholder="Telefone"
+        mask="(00)00000-0000"
+        [size]="50"
+      />
+    </div>
+
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="cpf"
+        placeholder="CPF"
+        mask="000.000.000-00"
+        [size]="50"
+      />
+    </div>
+    <div class="field">
+      <textarea
+        pInputTextarea
+        class="form-control"
+        type="text"
+        formControlName="address"
+        placeholder="Endereço"
+        [rows]="5"
+        [cols]="50"
+      ></textarea>
+    </div>
+    <div class="field">
+      <p-button
+        type="submit"
+        label="Cadastrar"
+        [disabled]="!cadastrarForm.valid"
+      ></p-button>
+    </div>
+  </form>
+  <!-- Editar -->
+  <p-table
+    class="table"
+    [columns]="cols"
+    [value]="rows"
+    [hidden]="hiddenTableEditar"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+        <th style="width: 3em"></th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-expanded="expanded"
+      let-rowData
+      let-columns="columns"
+    >
+      <tr>
+        <td *ngFor="let col of columns">
+          {{ rowData[col.field] }}
+        </td>
+        <td>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-pencil"
+            class="ui-button-info"
+            (click)="handleEditarTable(rowData)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <form
+    [hidden]="hiddenFormEditar"
+    (ngSubmit)="handleSubmitEditar()"
+    [formGroup]="editarForm"
+  >
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="name"
+        placeholder="Nome"
+        [size]="50"
+        [(ngModel)]="cloneRow.name"
+      />
+    </div>
+
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="email"
+        placeholder="Email"
+        [size]="50"
+        [(ngModel)]="cloneRow.email"
+      />
+    </div>
+
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="phone"
+        placeholder="Telefone"
+        mask="(00)00000-0000"
+        [size]="50"
+        [(ngModel)]="cloneRow.phone"
+      />
+    </div>
+
+    <div class="field">
+      <input
+        pInputText
+        class="form-control"
+        type="text"
+        formControlName="cpf"
+        placeholder="CPF"
+        mask="000.000.000-00"
+        [size]="50"
+        [(ngModel)]="cloneRow.cpf"
+      />
+    </div>
+    <div class="field">
+      <textarea
+        pInputTextarea
+        class="form-control"
+        type="text"
+        formControlName="address"
+        placeholder="Endereço"
+        [rows]="5"
+        [cols]="50"
+        [(ngModel)]="cloneRow.address"
+      ></textarea>
+    </div>
+    <div class="field">
+      <p-button
+        type="submit"
+        label="Editar"
+        [disabled]="!editarForm.valid"
+      ></p-button>
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="ui-button-danger"
+        (click)="handleFormEditarCancelar()"
+      ></button>
+    </div>
+  </form>
+  <!-- excluir -->
+  <p-table
+    class="table"
+    [columns]="cols"
+    [value]="rows"
+    [hidden]="hiddenTableExcluir"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+        <th style="width: 3em"></th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-expanded="expanded"
+      let-rowData
+      let-columns="columns"
+    >
+      <tr>
+        <td *ngFor="let col of columns">
+          {{ rowData[col.field] }}
+        </td>
+        <td>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-trash"
+            class="ui-button-danger"
+            (click)="display = true; handleExcluirTable(rowData)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<!-- delete confirm -->
+<p-dialog [(visible)]="display">
+  <p-header>
+    Excluir
+  </p-header>
+  Tem certeza que deseja excluir esse destinatario ?
+  <p-footer>
+    <button
+      pButton
+      type="button"
+      label="Excluir"
+      class="ui-button-danger"
+      (click)="display = false; handleSubmitExcluir()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Cancelar"
+      (click)="display = false"
+    ></button>
+  </p-footer>
+</p-dialog>
